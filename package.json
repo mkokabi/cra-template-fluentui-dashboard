@@ -12,14 +12,14 @@
   "description": "The template for Create fluentui-dashboard React App.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mkokabi/create-fluentui-dashboard.git"
+    "url": "https://github.com/mkokabi/cra-template-fluentui-dashboard"
   },
   "license": "MIT",
   "engines": {
     "node": ">=14"
   },
   "bugs": {
-    "url": "https://github.com/mkokabi/create-fluentui-dashboard/issues"
+    "url": "https://github.com/mkokabi/cra-template-fluentui-dashboard/issues"
   },
   "files": [
     "template",
