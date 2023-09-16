@@ -1,0 +1,28 @@
+{
+  "name": "cra-template-fluentui-dashboard",
+  "version": "1.2.0",
+  "keywords": [
+    "react",
+    "create-react-app",
+    "template",
+    "typescript",
+    "fluentui",
+    "dashboard"
+  ],
+  "description": "The template for Create fluentui-dashboard React App.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkokabi/create-fluentui-dashboard.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "bugs": {
+    "url": "https://github.com/mkokabi/create-fluentui-dashboard/issues"
+  },
+  "files": [
+    "template",
+    "template.json"
+  ]
+}
