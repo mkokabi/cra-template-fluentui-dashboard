@@ -14,6 +14,8 @@ npx create-react-app my-app --template fluentui-dashboard
 yarn create react-app my-app --template fluentui-dashboard
 ```
 
+For the top left menu select the User and then about to stop the progressbar.
+
 For more information, please refer to:
 
 - [Getting Started](https://create-react-app.dev/docs/getting-started) – How to create a new app.

@@ -1,13 +1,13 @@
-import { FC } from 'react';
-import { PrimaryButton } from '@fluentui/react';
-import './App.css';
+import { FC } from "react";
+import "./App.css";
+import Layout from "./components/Layout";
 
 const App: FC<any> = ({ instance }) => {
-return (
-  <div>
-    <PrimaryButton>Hello</PrimaryButton>
-  </div>
-)
-}
+  return (
+    <div>
+      <Layout />
+    </div>
+  );
+};
 
 export default App;
