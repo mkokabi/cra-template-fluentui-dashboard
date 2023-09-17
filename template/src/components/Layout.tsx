@@ -6,14 +6,22 @@ import {
     IProgressIndicatorStyles,
     ITextStyles,
     MessageBar,
+    MessageBarButton,
     Nav,
     ProgressIndicator,
     Stack,
     Text,
     mergeStyles,
   } from "@fluentui/react";
+  import { useAtomValue, useSetAtom } from "jotai";
   import React, { useState } from "react";
   import { useNavigate } from "react-router-dom";
+  import {
+    clearMessageAtom,
+    errorMessageAtom,
+    messageAtom,
+    successMessageAtom,
+  } from "../atoms/messageBarAtoms";
   
   const Layout = (props: any) => {
     const logoBackground = mergeStyles({
@@ -21,6 +29,11 @@ import {
     });
   
     const navigate = useNavigate();
+  
+    const message = useAtomValue(messageAtom);
+    const clearMessage = useSetAtom(clearMessageAtom);
+    const setSuccessMessage = useSetAtom(successMessageAtom);
+    const setErrorMessage = useSetAtom(errorMessageAtom);
   
     const [navExpanded, setNavExpanded] = useState(true);
     const [isInProgress, setIsInProgress] = useState(false);
@@ -80,6 +93,30 @@ import {
             subMenuProps: {
               items: [
                 {
+                  key: "toggleInProgress",
+                  text: "Toggle In Progress",
+                  ariaLabel: "Toggle In Progress",
+                  onClick: async () => {
+                    setIsInProgress(!isInProgress);
+                  },
+                },
+                {
+                  key: "showSuccessMessage",
+                  text: "Success Message",
+                  ariaLabel: "Success Message In Message Bar",
+                  onClick: async () => {
+                    setSuccessMessage("This is a success message");
+                  },
+                },
+                {
+                  key: "showErrorMessage",
+                  text: "Error Message",
+                  ariaLabel: "Error Message In Message Bar",
+                  onClick: async () => {
+                    setErrorMessage("This is a error message");
+                  },
+                },
+                {
                   key: "profile",
                   text: "Profile",
                   ariaLabel: "Profile",
@@ -94,9 +131,7 @@ import {
                   key: "about",
                   text: "About",
                   ariaLabel: "About",
-                  onClick: () => {
-                    setIsInProgress(!isInProgress);
-                  },
+                  onClick: () => {},
                 },
               ],
             },
@@ -210,7 +245,7 @@ import {
             <Nav
               onLinkClick={(e, link) => {
                 e?.preventDefault();
-                //   clearMessage();
+                clearMessage();
                 //   setActiveNav(link?.key ?? "");
                 if (link?.url) {
                   navigate(link?.url);
@@ -224,7 +259,7 @@ import {
               // }}
             />
             <Stack grow style={{ display: "flex" }}>
-              {/* {message.message ? (
+              {message.message ? (
                 <MessageBar
                   messageBarType={message.messageType}
                   isMultiline={false}
@@ -244,7 +279,7 @@ import {
                 </MessageBar>
               ) : (
                 <></>
-              )} */}
+              )}
               <Stack
                 horizontal
                 disableShrink
