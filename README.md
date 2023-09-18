@@ -14,7 +14,7 @@ npx create-react-app my-app --template fluentui-dashboard
 yarn create react-app my-app --template fluentui-dashboard
 ```
 
-For the top left menu select the User and then about to stop the progressbar.
+For the top left menu find options to show message bar success and errors and toggle progressbar.
 
 For more information, please refer to:
 

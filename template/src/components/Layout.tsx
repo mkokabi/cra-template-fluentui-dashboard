@@ -1,6 +1,7 @@
 import {
     CommandBar,
     ICommandBarItemProps,
+    INavLink,
     INavLinkGroup,
     INavStyles,
     IProgressIndicatorStyles,
@@ -36,6 +37,9 @@ import {
     const setErrorMessage = useSetAtom(errorMessageAtom);
   
     const [navExpanded, setNavExpanded] = useState(true);
+    const [expandedNav, setExpandedNav] = useState("");
+    const [activeNav, setActiveNav] = useState("home");
+  
     const [isInProgress, setIsInProgress] = useState(false);
     const [isConnected, setIsConnected] = useState(true);
     const [notifications, setNotifications] = useState<string[]>([]);
@@ -156,22 +160,30 @@ import {
           {
             name: "Home",
             url: "/",
-            expandAriaLabel: "Assets list",
-            collapseAriaLabel: "Assets list",
+            expandAriaLabel: "Home",
+            collapseAriaLabel: "Home",
             iconProps: {
               iconName: "Home",
               styles: { root: { color: "green" } },
             },
           },
           {
-            name: "Items",
-            url: "/items",
-            expandAriaLabel: "Zones list",
-            collapseAriaLabel: "Zones list",
-            iconProps: {
-              iconName: "CubeShape",
-              styles: { root: { color: "goldenRod" } },
-            },
+            name: "Samples",
+            key: "samples",
+            url: "/samples",
+            expandAriaLabel: "Samples",
+            collapseAriaLabel: "Samples",
+            isExpanded: expandedNav === "samples",
+            links: [
+              {
+                name: "Items",
+                url: "/items",
+                iconProps: {
+                  iconName: "CubeShape",
+                  styles: { root: { color: "goldenRod" } },
+                },
+              },
+            ],
           },
         ],
       },
@@ -206,6 +218,13 @@ import {
         border: "1px solid #eee",
         overflowY: "auto",
         backgroundImage: "linear-gradient(to right, #FFFFFF, #FAFAFA)",
+      },
+      link: {
+        height: 42,
+        paddingLeft: navExpanded ? undefined : 5,
+      },
+      linkText: {
+        display: navExpanded ? "block" : "none",
       },
     };
   
@@ -246,7 +265,7 @@ import {
               onLinkClick={(e, link) => {
                 e?.preventDefault();
                 clearMessage();
-                //   setActiveNav(link?.key ?? "");
+                setActiveNav(link?.key ?? "");
                 if (link?.url) {
                   navigate(link?.url);
                 }
@@ -254,9 +273,9 @@ import {
               ariaLabel="Nav"
               styles={navStyles}
               groups={navLinks}
-              // onLinkExpandClick={(_, item?: INavLink) => {
-              //   setExpandedNav(item?.key ?? "");
-              // }}
+              onLinkExpandClick={(_, item?: INavLink) => {
+                setExpandedNav(item?.key ?? "");
+              }}
             />
             <Stack grow style={{ display: "flex" }}>
               {message.message ? (
