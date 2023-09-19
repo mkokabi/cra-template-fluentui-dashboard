@@ -14,6 +14,18 @@ npx create-react-app my-app --template fluentui-dashboard
 yarn create react-app my-app --template fluentui-dashboard
 ```
 
+## Auth settings
+```config
+REACT_APP_BACKEND_API_URL=http://localhost:7071/v1
+REACT_APP_REDIRECT_URI=http://localhost:3000/
+REACT_APP_TENANT_ID=<Your tenant Id>
+REACT_APP_PORTAL_CLIENT_ID=<Your application/Client Id>
+REACT_APP_SCOPES=<Scope(s)>
+REACT_APP_ADMIN_ROLE=<Admin role>
+REACT_APP_VIEWER_ROLE=<Viewer role>
+```
+
+# Testing features
 For the top left menu find options to show message bar success and errors and toggle progressbar.
 
 For more information, please refer to:
