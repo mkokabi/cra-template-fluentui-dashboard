@@ -26,10 +26,10 @@ export const loginRequest = {
   scopes: ["User.Read"],
 };
 
-// // Add the endpoints here for Microsoft Graph API services you'd like to use.
-// export const graphConfig = {
-//   graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
-// };
+// Add the endpoints here for Microsoft Graph API services you'd like to use.
+export const graphConfig = {
+  graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+};
 
 export const appRoles = {
   Admin: `${process.env.REACT_APP_ADMIN_ROLE}`,

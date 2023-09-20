@@ -9,11 +9,6 @@ import { msalConfig } from "./services/authConfig";
 import { MsalProvider } from "@azure/msal-react";
 
 export const msalInstance = new PublicClientApplication(msalConfig);
-const accounts = msalInstance.getAllAccounts();
-
-if (accounts.length > 0) {
-  msalInstance.setActiveAccount(accounts[0]);
-}
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
