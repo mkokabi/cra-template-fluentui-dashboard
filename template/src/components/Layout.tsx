@@ -1,28 +1,21 @@
 import {
-  CommandBar,
-  ICommandBarItemProps,
-  INavLink,
-  INavLinkGroup,
-  INavStyles,
   IProgressIndicatorStyles,
   ITextStyles,
   MessageBar,
   MessageBarButton,
-  Nav,
   ProgressIndicator,
   Stack,
   Text,
   mergeStyles,
 } from "@fluentui/react";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, { PropsWithChildren, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { PropsWithChildren, useState } from "react";
 import {
   clearMessageAtom,
-  errorMessageAtom,
   messageAtom,
-  successMessageAtom,
 } from "../atoms/messageBarAtoms";
+import Sidebar from "./Sidebar";
+import TopBar from "./TopBar";
 
 export interface ILayoutProps {
   onSignOut: () => void;
@@ -33,167 +26,10 @@ const Layout = (props: PropsWithChildren<ILayoutProps>) => {
     backgroundImage: "linear-gradient(to right, lightblue, #FFFFFF)",
   });
 
-  const navigate = useNavigate();
-
   const message = useAtomValue(messageAtom);
   const clearMessage = useSetAtom(clearMessageAtom);
-  const setSuccessMessage = useSetAtom(successMessageAtom);
-  const setErrorMessage = useSetAtom(errorMessageAtom);
-
-  const [navExpanded, setNavExpanded] = useState(true);
-  const [expandedNav, setExpandedNav] = useState("");
-  const [activeNav, setActiveNav] = useState("home");
 
   const [isInProgress, setIsInProgress] = useState(false);
-  const [isConnected, setIsConnected] = useState(true);
-  const [notifications, setNotifications] = useState<string[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [profileData, setProfileData] = useState({
-    givenName: "John",
-    surname: "Doe",
-  });
-
-  const _items: ICommandBarItemProps[] = [];
-
-  const _farItems: ICommandBarItemProps[] = [
-    {
-      key: "connectionStatus",
-      text: "Connection Status",
-      ariaLabel: "Connection Status",
-      iconOnly: true,
-      iconProps: {
-        iconName: isConnected ? "PlugConnected" : "PlugDisconnected",
-      },
-    },
-    {
-      key: "notifications",
-      text:
-        notifications.length > 0 ? notifications.length.toString() : undefined,
-      ariaLabel: "Notifications",
-      buttonStyles: {
-        textContainer: {
-          position: "absolute",
-          left: 3,
-          top: 5,
-          backgroundColor: "red",
-          color: "white",
-          borderRadius: 5,
-        },
-      },
-      iconProps: { iconName: "Ringer" },
-      onClick: () => {},
-    },
-    !isAuthenticated
-      ? {
-          key: "login",
-          text: "Login",
-          ariaLabel: "Login",
-          iconOnly: true,
-          iconProps: { iconName: "FollowUser" },
-          onClick: () => {},
-        }
-      : {
-          key: "signedIn",
-          text: `${profileData.givenName ?? ""} ${profileData.surname ?? ""}`,
-          ariaLabel: "Signed In",
-          iconOnly: true,
-          iconProps: { iconName: "Contact" },
-          subMenuProps: {
-            items: [
-              {
-                key: "toggleInProgress",
-                text: "Toggle In Progress",
-                ariaLabel: "Toggle In Progress",
-                onClick: async () => {
-                  setIsInProgress(!isInProgress);
-                },
-              },
-              {
-                key: "showSuccessMessage",
-                text: "Success Message",
-                ariaLabel: "Success Message In Message Bar",
-                onClick: async () => {
-                  setSuccessMessage("This is a success message");
-                },
-              },
-              {
-                key: "showErrorMessage",
-                text: "Error Message",
-                ariaLabel: "Error Message In Message Bar",
-                onClick: async () => {
-                  setErrorMessage("This is a error message");
-                },
-              },
-              {
-                key: "profile",
-                text: "Profile",
-                ariaLabel: "Profile",
-                onClick: async () => {},
-              },
-              {
-                key: "logout",
-                text: "Logout",
-                onClick: () => {
-                  props.onSignOut();
-                },
-              },
-              {
-                key: "about",
-                text: "About",
-                ariaLabel: "About",
-                onClick: () => {},
-              },
-            ],
-          },
-        },
-  ];
-
-  const navLinks: INavLinkGroup[] = [
-    {
-      links: [
-        {
-          name: "",
-          url: "",
-          icon: navExpanded ? "DoubleChevronLeft8" : "DoubleChevronRight8",
-          onClick: () => {
-            if (navExpanded) {
-              setNavExpanded(false);
-            } else {
-              setNavExpanded(true);
-            }
-          },
-        },
-        {
-          name: "Home",
-          url: "/",
-          expandAriaLabel: "Home",
-          collapseAriaLabel: "Home",
-          iconProps: {
-            iconName: "Home",
-            styles: { root: { color: "green" } },
-          },
-        },
-        {
-          name: "Samples",
-          key: "samples",
-          url: "/samples",
-          expandAriaLabel: "Samples",
-          collapseAriaLabel: "Samples",
-          isExpanded: expandedNav === "samples",
-          links: [
-            {
-              name: "Items",
-              url: "/items",
-              iconProps: {
-                iconName: "CubeShape",
-                styles: { root: { color: "goldenRod" } },
-              },
-            },
-          ],
-        },
-      ],
-    },
-  ];
 
   const titleTextStyles: Partial<ITextStyles> = {
     root: {
@@ -217,23 +53,6 @@ const Layout = (props: PropsWithChildren<ILayoutProps>) => {
     root: {},
   };
 
-  const navStyles: Partial<INavStyles> = {
-    root: {
-      width: navExpanded ? 180 : 42,
-      boxSizing: "border-box",
-      border: "1px solid #eee",
-      overflowY: "auto",
-      backgroundImage: "linear-gradient(to right, #FFFFFF, #FAFAFA)",
-    },
-    link: {
-      height: 42,
-      paddingLeft: navExpanded ? undefined : 5,
-    },
-    linkText: {
-      display: navExpanded ? "block" : "none",
-    },
-  };
-
   return (
     <>
       <Stack
@@ -251,14 +70,7 @@ const Layout = (props: PropsWithChildren<ILayoutProps>) => {
           <Text styles={subtitleTextStyles}>Sub title</Text>
         </Stack.Item>
         <Stack.Item grow>
-          <CommandBar
-            className="Header"
-            items={_items}
-            farItems={_farItems}
-            ariaLabel="Items actions"
-            primaryGroupAriaLabel="Items actions"
-            farItemsGroupAriaLabel="More actions"
-          />
+          <TopBar onSignOut={props.onSignOut} />
         </Stack.Item>
       </Stack>
       <Stack>
@@ -267,22 +79,8 @@ const Layout = (props: PropsWithChildren<ILayoutProps>) => {
           percentComplete={!isInProgress ? 0 : undefined}
         />
         <Stack horizontal>
-          <Nav
-            onLinkClick={(e, link) => {
-              e?.preventDefault();
-              clearMessage();
-              setActiveNav(link?.key ?? "");
-              if (link?.url) {
-                navigate(link?.url);
-              }
-            }}
-            ariaLabel="Nav"
-            styles={navStyles}
-            groups={navLinks}
-            onLinkExpandClick={(_, item?: INavLink) => {
-              setExpandedNav(item?.key ?? "");
-            }}
-          />
+          <Sidebar />
+
           <Stack grow style={{ display: "flex" }}>
             {message.message ? (
               <MessageBar
