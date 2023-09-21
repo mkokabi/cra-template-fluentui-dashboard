@@ -2,6 +2,7 @@ import { CommandBar, ICommandBarItemProps } from "@fluentui/react";
 import { PropsWithChildren, useState } from "react";
 import { errorMessageAtom, successMessageAtom } from "../atoms/messageBarAtoms";
 import { useSetAtom } from "jotai";
+import { dialogNameAtom } from "../atoms/dialogsAtom";
 
 export interface ITopBarProps {
   onSignOut: () => void;
@@ -11,6 +12,7 @@ const TopBar = (props: PropsWithChildren<ITopBarProps>) => {
   const [isInProgress, setIsInProgress] = useState(false);
   const setSuccessMessage = useSetAtom(successMessageAtom);
   const setErrorMessage = useSetAtom(errorMessageAtom);
+  const setDialogName = useSetAtom(dialogNameAtom);
 
   const [isConnected, setIsConnected] = useState(true);
   const [notifications, setNotifications] = useState<string[]>([]);
@@ -95,7 +97,9 @@ const TopBar = (props: PropsWithChildren<ITopBarProps>) => {
                 key: "profile",
                 text: "Profile",
                 ariaLabel: "Profile",
-                onClick: async () => {},
+                onClick: async () => {
+                  setDialogName("profile");
+                },
               },
               {
                 key: "logout",

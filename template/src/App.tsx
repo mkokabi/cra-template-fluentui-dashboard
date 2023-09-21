@@ -3,20 +3,25 @@ import "./App.css";
 import Layout from "./components/Layout";
 import Routes from "./Routes";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { PrimaryButton } from "@fluentui/react";
+import { Dialog, DialogType, PrimaryButton } from "@fluentui/react";
 import { appRoles, loginRequest } from "./services/authConfig";
 import { getProfileData } from "./services/graph";
-import { IProfileData } from "./atoms/authAtoms";
-import { useSetAtom } from "jotai";
+import { IProfileData, profileDataAtom } from "./atoms/authAtoms";
+import { useAtom, useSetAtom } from "jotai";
 import { errorMessageAtom } from "./atoms/messageBarAtoms";
 import { EventType } from "@azure/msal-browser";
 import { BrowserRouter } from "react-router-dom";
+import Profile from "./components/Profile";
+import { dialogNameAtom } from "./atoms/dialogsAtom";
 
 const App: FC<any> = ({ instance }) => {
   const setErrorMessage = useSetAtom(errorMessageAtom);
   const [showAuthSpinner, setShowAuthSpinner] = useState(false);
 
   const isAuthenticatedInAad = useIsAuthenticated();
+
+  const [dialogName, setDialogName] = useAtom(dialogNameAtom);
+  const setProfileData = useSetAtom(profileDataAtom);
 
   const { accounts } = useMsal();
   const account = useAccount();
@@ -52,6 +57,9 @@ const App: FC<any> = ({ instance }) => {
           const username = account?.username;
           profileData.userPrincipalName = username ?? "";
           console.log("profileData", profileData);
+
+          profileData.userPrincipalName = username ?? "";
+          setProfileData(profileData);
         }
       } catch (error: any) {
         console.error("Error:", error);
@@ -95,11 +103,25 @@ const App: FC<any> = ({ instance }) => {
         </div>
       ) : isAuthenticatedInAad ? (
         isAuthorized ? (
-          <BrowserRouter basename="/">
-            <Layout onSignOut={handleSignOut}>
-              <Routes />
-            </Layout>
-          </BrowserRouter>
+          <>
+            <BrowserRouter basename="/">
+              <Layout onSignOut={handleSignOut}>
+                <Routes />
+              </Layout>
+            </BrowserRouter>
+            <Dialog
+              hidden={!dialogName}
+              onDismiss={() => setDialogName(undefined)}
+              dialogContentProps={{
+                type: DialogType.normal,
+                title: (dialogName ? 
+                  (dialogName?.charAt(0).toUpperCase()+ dialogName.slice(1)) : ""),
+                closeButtonAriaLabel: "Close",
+              }}
+            >
+              {dialogName === "profile" && <Profile />}
+            </Dialog>
+          </>
         ) : (
           <div className="App">
             <p>
